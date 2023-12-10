@@ -475,7 +475,7 @@ public class GatorInvaders {
         public void Update() {
             Random r = new Random();
 
-            if (r.nextDouble() < 0.01) {
+            if (r.nextDouble() < 0.001) {
                 GameObject EnemyBullet = new GameObject();
                 EnemyBullet.shape = new Ellipse2D.Float((float) gameObject.transform.getTranslateX() + 18, (float) gameObject.transform.getTranslateY(), 10, 10);
                 EnemyBullet.material = new Material(Color.RED, Color.RED, 1);
