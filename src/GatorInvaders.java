@@ -35,10 +35,7 @@ public class GatorInvaders {
         Input.UpdateInputs();
         aliens.clear();
         health.clear();
-        Random r = new Random();
-        int randomPower = r.nextInt(400);
-
-        Color Diamond = new Color(84, 214, 172);
+        int currentLevel = 1;
 
         GameObject Background = new GameObject(0, 0);
         Background.shape = new java.awt.geom.Rectangle2D.Float(0.0F, 0.0F, 0.0F, 0.0F);
@@ -55,83 +52,82 @@ public class GatorInvaders {
         }
 
         GameObject Player = new GameObject(238, 400);
-        Player.shape = new java.awt.geom.Rectangle2D.Float(0.0F, 0.0F, 30.0F, 50.0F);
+        Player.shape = new java.awt.geom.Rectangle2D.Float(0.0F, 0.0F, 30.0F, 30.0F);
         Player.material = new Material("resources/Ship.png");
         Player.scripts.add(new PlayerMovement(Player));
-        Player.scripts.add(new PlayerAttack(Player, aliens, 30));
+        Player.scripts.add(new PlayerAttack(Player, aliens, currentLevel));
         Player.Scale(1.5f, 1.5f);
         GatorEngine.Create(Player);
 
         for (int i = 1; i <= 3; i++) {
             for (int j = 0; j < 6; j++) {
                 GameObject Enemy = new GameObject(j * 50, i * 50);
-                Enemy.shape = new java.awt.geom.Rectangle2D.Float(0.0F, 0.0F, 25.0F, 25.0F);
+                Enemy.shape = new java.awt.geom.Rectangle2D.Float(0.0F, 0.0F, 27.5F, 27.5F);
                 Enemy.transform.translate(75, -25);
                 Enemy.material = new Material("resources/Enemy1.png");
                 Enemy.Scale(1.5f, 1.5f);
-                Enemy.scripts.add(new EnemyMovement(Enemy));
-                Enemy.scripts.add(new EnemyAttack(Enemy, Player, health));
+                Enemy.scripts.add(new EnemyMovement(Enemy, Player));
+                Enemy.scripts.add(new EnemyAttack(Enemy, Player, health, currentLevel));
                 aliens.add(Enemy);
                 GatorEngine.Create(Enemy);
             }
         }
-
-        if (r.nextDouble() < 0.3) {
-            GameObject PowerUp = new GameObject(randomPower, 0);
-            PowerUp.shape = new Ellipse2D.Float(0, 0, 15, 15);
-            PowerUp.material = new Material(Diamond, Diamond, 1);
-            PowerUp.scripts.add(new PowerMovement(PowerUp));
-            PowerUp.scripts.add(new PowerUp(PowerUp, Player, aliens));
-            GatorEngine.Create(PowerUp);
-        }
-
-        System.out.println(r.nextDouble());
     }
 
     static void LevelTwo() {
         GatorEngine.UpdateObjectList();
         GatorEngine.OBJECTLIST.clear();
         Input.UpdateInputs();
+        aliens.clear();
+        health.clear();
+        int currentLevel = 2;
+        Random r = new Random();
 
-        GameObject Game = new GameObject(0, 0);
-        Game.shape = new java.awt.geom.Rectangle2D.Float(0.0F, 0.0F, 0.0F, 0.0F);
-        Game.material = new Material("resources/Background.png");
-        GatorEngine.Create(Game);
-        Game.Scale(0.5f, 0.5f);
+        GameObject Background = new GameObject(0, 0);
+        Background.shape = new java.awt.geom.Rectangle2D.Float(0.0F, 0.0F, 0.0F, 0.0F);
+        Background.material = new Material("resources/Background.png");
+        GatorEngine.Create(Background);
+        Background.Scale(0.5f, 0.5f);
 
-        GameObject firstHP = new GameObject(10, 460);
-        firstHP.material = new Material("resources/Ship.png");
-        firstHP.Scale(0.9f, 0.9f);
-        GatorEngine.Create(firstHP);
-
-        GameObject secondHP = new GameObject(45, 460);
-        secondHP.material = new Material("resources/Ship.png");
-        secondHP.Scale(0.9f, 0.9f);
-        GatorEngine.Create(secondHP);
-
-        GameObject thirdHP = new GameObject(80, 460);
-        thirdHP.material = new Material("resources/Ship.png");
-        thirdHP.Scale(0.9f, 0.9f);
-        GatorEngine.Create(thirdHP);
+        for (int i = 2; i >= 0; i--) {
+            GameObject healthPoint = new GameObject((35 * i) + 10 , 460);
+            healthPoint.material = new Material("resources/Ship.png");
+            healthPoint.Scale(0.9f, 0.9f);
+            GatorEngine.Create(healthPoint);
+            health.add(healthPoint);
+        }
 
         GameObject Player = new GameObject(238, 400);
-        Player.shape = new java.awt.geom.Rectangle2D.Float(0.0F, 0.0F, 30.0F, 50.0F);
+        Player.shape = new java.awt.geom.Rectangle2D.Float(0.0F, 0.0F, 30.0F, 30.0F);
         Player.material = new Material("resources/Ship.png");
         Player.scripts.add(new PlayerMovement(Player));
+        Player.scripts.add(new PlayerAttack(Player, aliens, currentLevel));
         Player.Scale(1.5f, 1.5f);
         GatorEngine.Create(Player);
 
         for (int i = 1; i <= 3; i++) {
             for (int j = 0; j < 6; j++) {
-                GameObject Enemy = new GameObject(j * 50, i * 50);
-                Enemy.shape = new java.awt.geom.Rectangle2D.Float(0.0F, 0.0F, 25.0F, 25.0F);
-                Enemy.transform.translate(75, -25);
-                Enemy.material = new Material("resources/Enemy2.png");
-                Enemy.Scale(1.5f, 1.5f);
-                Enemy.scripts.add(new EnemyMovement(Enemy));
-               //  Enemy.scripts.add(new EnemyAttack(Enemy, Player, firstHP, secondHP, thirdHP));
-                //Enemy.scripts.add(new PlayerAttack(Enemy, Player));
-                GatorEngine.Create(Enemy);
+                if (r.nextDouble() < 0.1) {
+                    GameObject Enemy = new GameObject(j * 50, i * 50);
+                    Enemy.shape = new java.awt.geom.Rectangle2D.Float(0.0F, 0.0F, 27.5F, 27.5F);
+                    Enemy.transform.translate(75, -25);
+                    Enemy.material = new Material("resources/Enemy1.png");
+                    Enemy.Scale(1.5f, 1.5f);
+                    Enemy.scripts.add(new EnemyMovement(Enemy, Player));
+                    Enemy.scripts.add(new EnemyAttack(Enemy, Player, health, currentLevel));
+                    aliens.add(Enemy);
+                    GatorEngine.Create(Enemy);
+                } else {
+                    GameObject Enemy = new GameObject(j * 50, i * 50);
+                    Enemy.shape = new java.awt.geom.Rectangle2D.Float(0.0F, 0.0F, 27.5F, 27.5F);
+                    Enemy.transform.translate(75, -25);
+                    Enemy.material = new Material("resources/Enemy2.png");
+                    Enemy.Scale(1.5f, 1.5f);
+                    Enemy.scripts.add(new EnemyMovement(Enemy, Player));
+                    Enemy.scripts.add(new EnemyAttack(Enemy, Player, health, currentLevel));
+                    aliens.add(Enemy);
+                    GatorEngine.Create(Enemy);
+                }
             }
         }
     }
@@ -140,45 +136,42 @@ public class GatorInvaders {
         GatorEngine.UpdateObjectList();
         GatorEngine.OBJECTLIST.clear();
         Input.UpdateInputs();
+        aliens.clear();
+        health.clear();
+        int currentLevel = 3;
 
-        GameObject Game = new GameObject(0, 0);
-        Game.shape = new java.awt.geom.Rectangle2D.Float(0.0F, 0.0F, 0.0F, 0.0F);
-        Game.material = new Material("resources/Background.png");
-        GatorEngine.Create(Game);
-        Game.Scale(0.5f, 0.5f);
+        GameObject Background = new GameObject(0, 0);
+        Background.shape = new java.awt.geom.Rectangle2D.Float(0.0F, 0.0F, 0.0F, 0.0F);
+        Background.material = new Material("resources/Background.png");
+        GatorEngine.Create(Background);
+        Background.Scale(0.5f, 0.5f);
 
-        GameObject firstHP = new GameObject(10, 460);
-        firstHP.material = new Material("resources/Ship.png");
-        firstHP.Scale(0.9f, 0.9f);
-        GatorEngine.Create(firstHP);
-
-        GameObject secondHP = new GameObject(45, 460);
-        secondHP.material = new Material("resources/Ship.png");
-        secondHP.Scale(0.9f, 0.9f);
-        GatorEngine.Create(secondHP);
-
-        GameObject thirdHP = new GameObject(80, 460);
-        thirdHP.material = new Material("resources/Ship.png");
-        thirdHP.Scale(0.9f, 0.9f);
-        GatorEngine.Create(thirdHP);
+        for (int i = 2; i >= 0; i--) {
+            GameObject healthPoint = new GameObject((35 * i) + 10 , 460);
+            healthPoint.material = new Material("resources/Ship.png");
+            healthPoint.Scale(0.9f, 0.9f);
+            GatorEngine.Create(healthPoint);
+            health.add(healthPoint);
+        }
 
         GameObject Player = new GameObject(238, 400);
-        Player.shape = new java.awt.geom.Rectangle2D.Float(0.0F, 0.0F, 30.0F, 50.0F);
+        Player.shape = new java.awt.geom.Rectangle2D.Float(0.0F, 0.0F, 30.0F, 30.0F);
         Player.material = new Material("resources/Ship.png");
         Player.scripts.add(new PlayerMovement(Player));
+        Player.scripts.add(new PlayerAttack(Player, aliens, currentLevel));
         Player.Scale(1.5f, 1.5f);
         GatorEngine.Create(Player);
 
         for (int i = 1; i <= 3; i++) {
             for (int j = 0; j < 6; j++) {
                 GameObject Enemy = new GameObject(j * 50, i * 50);
-                Enemy.shape = new java.awt.geom.Rectangle2D.Float(0.0F, 0.0F, 25.0F, 25.0F);
+                Enemy.shape = new java.awt.geom.Rectangle2D.Float(0.0F, 0.0F, 27.5F, 27.5F);
                 Enemy.transform.translate(75, -25);
                 Enemy.material = new Material("resources/Enemy3.png");
                 Enemy.Scale(1.5f, 1.5f);
-                Enemy.scripts.add(new EnemyMovement(Enemy));
-                //Enemy.scripts.add(new EnemyAttack(Enemy, Player, firstHP, secondHP, thirdHP));
-             //   Enemy.scripts.add(new PlayerAttack(Enemy, Player));
+                Enemy.scripts.add(new EnemyMovement(Enemy, Player));
+                Enemy.scripts.add(new EnemyAttack(Enemy, Player, health, currentLevel));
+                aliens.add(Enemy);
                 GatorEngine.Create(Enemy);
             }
         }
@@ -257,45 +250,20 @@ public class GatorInvaders {
         }
     }
 
-    static class PowerUp extends ScriptableBehavior {
-        GameObject g2;
-        ArrayList<GameObject> g3;
-        static boolean isPowered;
-        static long startTime;
-        static long Power = 1000; // 5000 milliseconds (5 second)
-
-        PowerUp(GameObject g, GameObject g2, ArrayList<GameObject> g3) {
-            super(g);
-            this.g2 = g2;
-            this.g3 = g3;
-        }
-
-        @Override
-        public void Start() {
-            isPowered = false;
-        }
-
-        @Override
-        public void Update() {
-
-            if (gameObject.CollidesWith(g2)) {
-                g2.material.setImg("resources/ShipUpgrade.png");
-                isPowered = true;
-                startTime = System.currentTimeMillis();
-                g2.scripts.add(new PlayerAttack(g2, g3, 10));
-                GatorEngine.Delete(gameObject);
-            }
-
-        }
-    }
-
     static class PowerMovement extends ScriptableBehavior {
-        private int dx = 1;
-        private int dy = 0;
-        private int oldDx = dx;
+        // dx, dy = (0, 1) down<----
+        //          (1, 0) right    |
+        //          (0, 1) down    |
+        //          (-1, 0) left    |
+        //          (0, 1) down ----
+        // Objective: Cycle.
+
+        private int dx = 0;
+        private int dy = 1;
+        private int oldDx = 1;
         private int count = 0;
         private int maxCount = 50;
-        private float velocity = 2.5f;
+        private float velocity = 2f;
 
         PowerMovement(GameObject g) {
             super(g);
@@ -308,15 +276,15 @@ public class GatorInvaders {
         @Override
         public void Update() {
             if (count > -1 && count < maxCount) {
-                // Right
-                if (dx == 1 && dy == 0) {
-                    gameObject.Translate(velocity * dx, 0);
+                // Down
+                if (dx == 0 && dy == 1) {
+                    gameObject.Translate(0, velocity * dy);
                     count++;
                 }
 
-                // Down
-                else if (dx == 0 && dy == 1) {
-                    gameObject.Translate(0, velocity * dy);
+                // Right
+                else if (dx == 1 && dy == 0) {
+                    gameObject.Translate(velocity * dx, 0);
                     count++;
                 }
 
@@ -327,15 +295,8 @@ public class GatorInvaders {
                 }
 
             } else if (count >= maxCount) {
-                // Right -> Down
-                if (dx == 1 && dy == 0) {
-                    oldDx = dx;
-                    dx = 0;
-                    dy = 1;
-                    count = maxCount / 2;
-                }
                 // Down to Right or Left
-                else if (dy == 1) {
+                if (dy == 1) {
                     dy = 0;
                     if (oldDx == 1) {
                         dx = -1;
@@ -343,12 +304,26 @@ public class GatorInvaders {
                         dx = 1;
                     }
                     count = 0;
-                } else if (dx == -1 && dy == 0) {
+                }
+                // Right
+                else if (dx == 1 && dy == 0) {
                     oldDx = dx;
                     dx = 0;
                     dy = 1;
                     count = maxCount / 2;
                 }
+
+                // Left
+                else if (dx == -1 && dy == 0) {
+                    oldDx = dx;
+                    dx = 0;
+                    dy = 1;
+                    count = maxCount / 2;
+                }
+            }
+
+            if (gameObject.transform.getTranslateY() > 400) {
+                GatorEngine.Delete(gameObject);
             }
         }
     }
@@ -377,15 +352,39 @@ public class GatorInvaders {
         }
     }
 
+    static class PlayerMovementBuffed extends ScriptableBehavior {
+        PlayerMovementBuffed(GameObject g) {
+            super(g);
+        }
+
+        @Override
+        public void Start() {
+
+        }
+
+        @Override
+        public void Update() {
+            // Move right (a) or move left (d) within the bounds of the window.
+            if (Input.GetKeyDown('a'))
+                if (gameObject.transform.getTranslateX() > 0) {
+                    gameObject.Translate(-0.5f, 0);
+                }
+            if (Input.GetKeyDown('d'))
+                if (gameObject.transform.getTranslateX() < 455) {
+                    gameObject.Translate(0.5f, 0);
+                }
+        }
+    }
+
     static class PlayerAttack extends ScriptableBehavior {
         int Delay;
         ArrayList<GameObject> g2;
-        int Reload;
+        int currentLevel;
 
         PlayerAttack(GameObject g, ArrayList<GameObject> g2, int Reload) {
             super(g);
             this.g2 = g2;
-            this.Reload = Reload;
+            this.currentLevel = Reload;
         }
 
         @Override
@@ -402,12 +401,12 @@ public class GatorInvaders {
             //GatorEngine.Create(g)
             Delay++;
             if (Input.GetKeyDown(' ')) {
-                if (Delay > Reload) {
+                if (Delay > 30) {
                     GameObject Bullet = new GameObject();
                     Bullet.shape = new Ellipse2D.Float((float) gameObject.transform.getTranslateX() + 18, (float) gameObject.transform.getTranslateY(), 10, 10);
                     Bullet.material = new Material(Color.CYAN, Color.CYAN, 1);
                     Bullet.scripts.add(new PlayerShoot(Bullet));
-                    Bullet.scripts.add(new Destroy(Bullet, g2));
+                    Bullet.scripts.add(new Destroy(Bullet, g2, currentLevel));
                     GatorEngine.Create(Bullet);
                     Delay = 0;
                 }
@@ -415,87 +414,15 @@ public class GatorInvaders {
         }
     }
 
-//    static class DamageEnemies2 extends ScriptableBehavior {
-//        GameObject g2, g3, g4;
-//        static int enemyCount = 18;
-//        static int level = 1;
-//        static boolean hasCollided = false;
-//        int Delay;
-//
-//        DamageEnemies2(GameObject g, GameObject g2, GameObject g3, GameObject g4) {
-//            super(g);
-//            this.g2 = g2;
-//            this.g3 = g3;
-//            this.g4 = g4;
-//        }
-//
-//        @Override
-//        public void Start() {
-//            enemyCount = 18;
-//            level = 1;
-//        }
-//
-//        @Override
-//        public void Update() {
-////            if (g2.CollidesWith(gameObject)) {
-////                GatorEngine.Delete(g2);
-////                g2.shape = new java.awt.geom.Rectangle2D.Float(0.0F, 0.0F, 0F, 0F);
-////                enemyCount--;
-////                hasCollided = true;
-////            }
-//            if (g2.)
-//
-//            else if (g3.CollidesWith(gameObject)) {
-//                GatorEngine.Delete(g3);
-//                g3.shape = new java.awt.geom.Rectangle2D.Float(0.0F, 0.0F, 0F, 0F);
-//                enemyCount--;
-//                hasCollided = true;
-//            }
-//
-//            else if (g4.CollidesWith(gameObject)) {
-//                GatorEngine.Delete(g4);
-//                g4.shape = new java.awt.geom.Rectangle2D.Float(0.0F, 0.0F, 0F, 0F);
-//                enemyCount--;
-//                hasCollided = true;
-//            }
-//
-//            if (hasCollided) {
-//                hasCollided = false;
-//                GatorEngine.Delete(gameObject);
-//            }
-//
-//            if (enemyCount <= 0) {
-//                Delay++;
-//                if (Delay > 50) {
-//                    if (level == 1) {
-//                        enemyCount = 18;
-//                        Delay = 0;
-//                        level = 2;
-//                        GatorInvaders.LevelTwo();
-//                    } else if (level == 2) {
-//                        enemyCount = 18;
-//                        Delay = 0;
-//                        level = 3;
-//                        GatorInvaders.LevelThree();
-//                    } else {
-//                        enemyCount = 18;
-//                        Delay = 0;
-//                        level = 1;
-//                        GatorInvaders.LevelOne();
-//                    }
-//                }
-//            }
-//            System.out.println("Level: " + level + " EnemyCount = " + enemyCount);
-//        }
-//    }
-
     static class Destroy extends ScriptableBehavior {
         ArrayList<GameObject> g2;
         int Delay;
+        int currentLevel;
 
-        Destroy(GameObject g, ArrayList<GameObject> g2) {
+        Destroy(GameObject g, ArrayList<GameObject> g2, int currentLevel) {
             super(g);
             this.g2 = g2;
+            this.currentLevel = currentLevel;
         }
 
         @Override
@@ -517,7 +444,13 @@ public class GatorInvaders {
             if (g2.size() == 0) {
                 Delay++;
                 if (Delay > 30) {
-                    GatorInvaders.LevelOne();
+                    if (currentLevel == 1) {
+                        GatorInvaders.LevelTwo();
+                    } else if (currentLevel == 2) {
+                        GatorInvaders.LevelThree();
+                    } else if (currentLevel == 3) {
+                        GatorInvaders.LevelOne();
+                    }
                 }
             }
         }
@@ -537,6 +470,10 @@ public class GatorInvaders {
         public void Update() {
             gameObject.Translate(0, -10f);
 
+            if (gameObject.transform.getTranslateY() < -400) {
+                GatorEngine.Delete(gameObject);
+            }
+
         }
     }
 
@@ -554,9 +491,11 @@ public class GatorInvaders {
         private int count = 0;
         private int maxCount = 75;
         private float velocity = 0.40f;
+        GameObject g2;
 
-        EnemyMovement(GameObject g) {
+        EnemyMovement(GameObject g, GameObject g2) {
             super(g);
+            this.g2 = g2;
         }
 
         @Override
@@ -609,22 +548,24 @@ public class GatorInvaders {
                 }
             }
 
-            if (gameObject.transform.getTranslateY() > 350) {
+            if (gameObject.transform.getTranslateY() >= g2.transform.getTranslateY() - 30) {
                 GatorInvaders.End();
                 GatorEngine.Delete(gameObject);
             }
-
         }
     }
 
     static class EnemyAttack extends ScriptableBehavior {
         GameObject g2;
         ArrayList<GameObject> g3;
+        int currentLevel;
+        Color Diamond = new Color(115, 250, 205);
 
-        EnemyAttack(GameObject g, GameObject g2, ArrayList<GameObject> g3) {
+        EnemyAttack(GameObject g, GameObject g2, ArrayList<GameObject> g3, int currentLevel) {
             super(g);
             this.g2 = g2;
             this.g3 = g3;
+            this.currentLevel = currentLevel;
         }
 
         @Override
@@ -636,14 +577,43 @@ public class GatorInvaders {
         public void Update() {
             Random r = new Random();
 
-            if (r.nextDouble() < 0.001) {
-                GameObject EnemyBullet = new GameObject();
-                EnemyBullet.shape = new Ellipse2D.Float((float) gameObject.transform.getTranslateX() + 18, (float) gameObject.transform.getTranslateY(), 10, 10);
-                EnemyBullet.material = new Material(Color.RED, Color.RED, 1);
-                EnemyBullet.scripts.add(new EnemyShoot(EnemyBullet));
-                EnemyBullet.scripts.add(new PlayerDamaged(EnemyBullet, g2, g3));
-                GatorEngine.Create(EnemyBullet);
+            if (currentLevel == 1) {
+
+                if (r.nextDouble() < 0.0005) {
+                    EnemyBullet();
+                }
+            } else if (currentLevel == 2) {
+                if (r.nextDouble() < 0.001) {
+                    EnemyBullet();
+                }
+            } else if (currentLevel == 3) {
+                if (r.nextDouble() < 0.0025) {
+                    EnemyBullet();
+                }
             }
+
+            Random r2 = new Random();
+
+            if (r2.nextDouble() < 0.00025) {
+                GameObject PowerUp = new GameObject();
+                PowerUp.shape = new Ellipse2D.Float((float) gameObject.transform.getTranslateX() + 18, (float) gameObject.transform.getTranslateY(), 15, 15);
+                PowerUp.material = new Material(Color.white, Color.white, 1);
+                PowerUp.material.setBorder(Diamond);
+                PowerUp.scripts.add(new PowerMovement(PowerUp));
+                PowerUp.scripts.add(new PlayerBuffed(PowerUp, g2, g3));
+                GatorEngine.Create(PowerUp);
+            }
+
+
+        }
+
+         void EnemyBullet() {
+            GameObject EnemyBullet = new GameObject();
+            EnemyBullet.shape = new Ellipse2D.Float((float) gameObject.transform.getTranslateX() + 18, (float) gameObject.transform.getTranslateY(), 10, 10);
+            EnemyBullet.material = new Material(Color.RED, Color.RED, 1);
+            EnemyBullet.scripts.add(new EnemyShoot(EnemyBullet));
+            EnemyBullet.scripts.add(new PlayerDamaged(EnemyBullet, g2, g3));
+            GatorEngine.Create(EnemyBullet);
         }
     }
 
@@ -652,7 +622,7 @@ public class GatorInvaders {
         ArrayList<GameObject> g3;
         static boolean isInvincible;
         static long startTime;
-        static long Invincibility = 1000; // 1000 milliseconds (1 second)
+        static long Invincibility = 1250; // 1250 milliseconds (1.25 second)
 
         PlayerDamaged(GameObject g, GameObject g2, ArrayList<GameObject> g3) {
             super(g);
@@ -695,6 +665,36 @@ public class GatorInvaders {
         }
     }
 
+    static class PlayerBuffed extends ScriptableBehavior {
+        GameObject g2;
+        ArrayList<GameObject> g3;
+        static boolean isInvincible;
+        static long startTime;// 1000 milliseconds (1 second)
+
+        PlayerBuffed(GameObject g, GameObject g2, ArrayList<GameObject> g3) {
+            super(g);
+            this.g2 = g2;
+            this.g3 = g3;
+
+        }
+
+        @Override
+        public void Start() {
+            isInvincible = false;
+        }
+        @Override
+        public void Update() {
+
+                if (gameObject.CollidesWith(g2)) {
+                    g2.material.setImg("resources/ShipUpgrade.png");
+                    startTime = System.currentTimeMillis();
+                    GatorEngine.Delete(gameObject);
+                    g2.scripts.add(new PlayerMovementBuffed(g2));
+                }
+
+        }
+    }
+
     static class EnemyShoot extends ScriptableBehavior {
             EnemyShoot(GameObject g) {
                 super(g);
@@ -707,10 +707,13 @@ public class GatorInvaders {
 
             @Override
             public void Update() {
-                gameObject.Translate(0, 10f);
+                gameObject.Translate(0, 7.5f);
+
+                if (gameObject.transform.getTranslateY() > 400) {
+                    GatorEngine.Delete(gameObject);
+                }
 
             }
         }
-
 
 }
