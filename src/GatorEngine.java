@@ -180,10 +180,7 @@ public class GatorEngine {
     //Here you can create GameObjects, assign scripts, set parameters, etc.
     //NOTE: This is where we should be able to insert out own code and scripts
     static void Start(){
-        GatorInvaders.LevelOne();
-        // Tests.TestNine();
-        // Pong.Start();
-        // SpaceInvaders.Start();
+        GatorInvaders.Start();
         //TODO: Start() all objects in OBJECTLIST
         //At the end, you will need to implement logic to loop over every GameObject in OBJECTLIST and
         //start them at the end of the function once everything has been set up.
